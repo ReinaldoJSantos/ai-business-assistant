@@ -4,7 +4,6 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, String, func
-
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -23,24 +22,35 @@ class User(Base):
         default=uuid.uuid4,
     )
 
-    name: Mapped[uuid.UUID] = mapped_column(
+    name: Mapped[str] = mapped_column(
         String(150),
         nullable=False
     )
 
-    email: Mapped[uuid.UUID] = mapped_column(
+    email: Mapped[str] = mapped_column(
         String(255),
         unique=True,
         index=True,
     )
 
-    is_active: Mapped[uuid.UUID] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
+    password_has: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
         nullable=False,
     )
 
-    on_update: Mapped[uuid.UUID] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullanle=False
+    )
+
+    update: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
