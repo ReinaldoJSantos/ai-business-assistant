@@ -31,9 +31,10 @@ class User(Base):
         String(255),
         unique=True,
         index=True,
+        nullable=False,
     )
 
-    password_has: Mapped[str] = mapped_column(
+    password_hash: Mapped[str] = mapped_column(
         String(255),
         nullable=False
     )
@@ -50,7 +51,7 @@ class User(Base):
         nullable=False
     )
 
-    update: Mapped[datetime] = mapped_column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
