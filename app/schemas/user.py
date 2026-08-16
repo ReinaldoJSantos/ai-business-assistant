@@ -10,10 +10,10 @@ class UserCreate(BaseModel):
     password: str = Field(min_length=2, max_length=120)
 
 class UserResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_atrributes=True)
 
     id: UUID
     name:str
-    is_Active:bool
+    is_active:bool
     created_at: datetime
-    update_at: datetime
+    updated_at: datetime
