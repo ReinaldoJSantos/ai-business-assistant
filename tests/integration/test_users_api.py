@@ -48,3 +48,33 @@ def test_create_user():
         assert response.json()["is_active"] is True
 
 
+def test_create_user_with_invalid_email():
+    response = client.post(
+        "api/v1/users",
+
+        json={
+            "name":"Reinaldo",
+            "email":"email-invalid",
+            "password":"12345678"
+    },
+
+    )
+    assert response.status_code == 422
+
+
+def test_create_user_with_existing_email():
+    with patch(
+    "app.api.v1.users.UserService.create_user",
+    side_effect=ValueError("Email already registered"),
+):
+        response = client.post(
+            "api/v1/users",
+            json={
+                "name":"Reinaldo",
+                "email":"reinaldo@example.com",
+                "password":"12345678",
+            },
+        )
+
+        assert response.status_code == 409
+        assert response.json()["detail"] == "Email already registered"

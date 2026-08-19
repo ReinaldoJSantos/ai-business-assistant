@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
@@ -23,4 +23,14 @@ def create_user(
 ):
     service = UserService(db)
 
-    return service.create_user(user_data)
+    try:
+        return service.create_user(user_data)
+    except ValueError as exc:
+        if str(exc) == "Email already registered":
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=str(exc)
+            )
+        raise
+
+    #return service.create_user(user_data)
