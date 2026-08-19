@@ -14,6 +14,7 @@ class UserResponse(BaseModel):
 
     id: UUID
     name:str
+    email:EmailStr
     is_active:bool
     created_at: datetime
     updated_at: datetime
