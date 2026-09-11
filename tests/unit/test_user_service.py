@@ -59,7 +59,3 @@ def test_create_user_with_existing_email():
 
             mock_repository.return_value.create.assert_not_called()
 
-def test_create_user_hash_passwortd():
-    db = MagicMock
-
-    
