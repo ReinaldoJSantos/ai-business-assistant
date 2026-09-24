@@ -29,3 +29,23 @@ def test_get_user_by_email(db):
     assert result is not None
     assert result.id == user.id
     assert result.email == "repository@example.com"
+
+
+def test_user_by_id(db):
+    user = User(
+        name="Reinaldo",
+        email="repository@example.com",
+        password_hash="TEMP_HASH",
+        is_active = True,
+    )
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    repository = UserRepository(db)
+    result = repository.get_by_id(user.id)
+
+    assert result is not None
+    assert result.id == user.id
+    assert result.email == user.email

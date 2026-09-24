@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -33,4 +35,25 @@ def create_user(
             )
         raise
 
-    #return service.create_user(user_data)
+
+@router.get(
+    "/{user_id}",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    )
+
+def get_user_by_id(
+    user_id: UUID,
+    db: Session = Depends(get_db),
+):
+    service = UserService(db)
+
+    user = service.get_user_by_id(user_id)
+
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+
+    return user

@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy.orm import Session
 
 from app.models.user import User
@@ -23,3 +25,9 @@ class UserService:
             password_hash=hash_password(user_data.password)
         )
         return self.repository.create(user)
+
+    def get_user_by_id(
+    self,
+    user_id: uuid.UUID,
+    ) -> User | None:
+        return self.repository.get_by_id(user_id)

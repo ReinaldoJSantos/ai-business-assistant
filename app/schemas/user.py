@@ -10,7 +10,7 @@ class UserCreate(BaseModel):
     password: str = Field(min_length=2, max_length=120)
 
 class UserResponse(BaseModel):
-    model_config = ConfigDict(from_atrributes=True)
+    model_config = ConfigDict(from_attributes=True)
 
     id: UUID
     name:str

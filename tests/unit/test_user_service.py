@@ -1,3 +1,5 @@
+
+import uuid
 import pytest
 from unittest.mock import MagicMock, patch
 
@@ -59,3 +61,29 @@ def test_create_user_with_existing_email():
 
             mock_repository.return_value.create.assert_not_called()
 
+def test_get_user_by_id():
+    db = MagicMock()
+    user_id = uuid.uuid4()
+
+    expected_user = User(
+        id=user_id,
+        name="Reinaldo",
+        email="get-by-id@example.com",
+        password_hash="fake_hash",
+        is_active=True,
+    )
+
+    mock_repository = MagicMock()
+    mock_repository.get_by_id.return_value = expected_user
+
+    with patch(
+        "app.services.user.UserRepository",
+        return_value=mock_repository,
+    ):
+        service = UserService(db)
+
+        result = service.get_user_by_id(user_id)
+
+        assert result == expected_user
+
+        mock_repository.get_by_id.assert_called_once_with(user_id)
