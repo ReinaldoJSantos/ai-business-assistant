@@ -49,3 +49,34 @@ def test_user_by_id(db):
     assert result is not None
     assert result.id == user.id
     assert result.email == user.email
+
+def test_get_all_users(db):
+    users = [
+        User(
+            name="Reinaldo",
+            email="list-1@example.com",
+            password_hash="HASH_1",
+            is_active= True,
+        ),
+        User(
+            name="Maria",
+            email="list-2@example.com",
+            password_hash="HASH_2",
+            is_active=True,
+        ),
+    ]
+
+    db.add_all(users)
+    db.commit()
+
+    repository = UserRepository(db)
+
+    result = repository.get_all()
+
+    assert len(result) == 2
+
+    emails = {user.email for user in result}
+    assert emails == {
+        "list-1@example.com",
+        "list-2@example.com",
+    }

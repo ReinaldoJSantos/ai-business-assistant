@@ -102,7 +102,7 @@ def test_get_user_by_id():
     ):
         response = client.get(f"/api/v1/users/{user_id}")
 
-        assert response.status_code == 201
+        assert response.status_code == 200
 
         data = response.json()
 
@@ -123,3 +123,54 @@ def test_get_user_by_id_not_found():
 
         assert response.status_code == 404
         assert response.json()["detail"] == "User not found"
+
+
+def test_get_users():
+    now = datetime.now(timezone.utc)
+
+    user_1 = MagicMock()
+    user_1.id = uuid.uuid4()
+    user_1.name = "Reinaldo Santos"
+    user_1.email = "list-1@example.com"
+    user_1.is_active = True
+    user_1.created_at = now
+    user_1.updated_at = now
+
+    user_2 = MagicMock()
+    user_2.id = uuid.uuid4()
+    user_2.name = "Maria Santos"
+    user_2.email = "list-2@example.com"
+    user_2.is_active = True
+    user_2.created_at = now
+    user_2.updated_at = now
+
+    mock_service = MagicMock()
+    mock_service.get_users.return_value = [user_1, user_2]
+
+    with patch(
+        "app.api.v1.users.UserService",
+        return_value=mock_service,
+    ):
+        response = client.get("/api/v1/users")
+
+    assert response.status_code == 200
+
+    data = response.json()
+    assert len(data) == 2
+    assert data[0]["email"] == "list-1@example.com"
+    assert data[1]["email"] == "list-2@example.com"
+
+def test_get_users_empty():
+
+
+    mock_service = MagicMock()
+    mock_service.get_users.return_value = []
+
+    with patch(
+        "app.api.v1.users.UserService",
+        return_value=mock_service,
+    ):
+        response = client.get("/api/v1/users")
+
+        assert response.status_code == 200
+        assert response.json() == []

@@ -87,3 +87,36 @@ def test_get_user_by_id():
         assert result == expected_user
 
         mock_repository.get_by_id.assert_called_once_with(user_id)
+
+
+def test_get_users():
+    db = MagicMock()
+    users = [
+        User(
+            name="Reinaldo",
+            email="service-list-1@example.com",
+            password_hash="HASH_1",
+            is_active=True,
+        ),
+        User(
+            name="Maria",
+            email="service-list-2@example.com",
+            password_hash="HASH_2",
+            is_active=True,
+        ),
+    ]
+
+    mock_repository = MagicMock()
+    mock_repository.get_all.return_value = users
+
+    with patch(
+        "app.services.user.UserRepository",
+        return_value=mock_repository,
+    ):
+        service = UserService(db)
+
+        result = service.get_users()
+
+    assert result == users
+
+    mock_repository.get_all.assert_called_once_with()

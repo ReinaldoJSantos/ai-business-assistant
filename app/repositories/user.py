@@ -26,3 +26,7 @@ class UserRepository:
         self.db.refresh(user)
 
         return user
+
+    def get_all(self) -> list[User]:
+        statement = select(User)
+        return list(self.db.scalars(statement).all())

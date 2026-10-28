@@ -39,15 +39,13 @@ def create_user(
 @router.get(
     "/{user_id}",
     response_model=UserResponse,
-    status_code=status.HTTP_201_CREATED,
+    status_code=status.HTTP_200_OK,
     )
-
 def get_user_by_id(
     user_id: UUID,
     db: Session = Depends(get_db),
 ):
     service = UserService(db)
-
     user = service.get_user_by_id(user_id)
 
     if user is None:
@@ -57,3 +55,15 @@ def get_user_by_id(
         )
 
     return user
+
+
+@router.get(
+    "",
+    response_model=list[UserResponse],
+    status_code=status.HTTP_200_OK,
+)
+def get_users(
+    db: Session = Depends(get_db),
+):
+    service = UserService(db)
+    return service.get_users()
